@@ -1,0 +1,26 @@
+import csv
+a= []
+with open('finds.csv') as csfile:
+    reader = csv.reader(csfile)
+    for row in reader:
+        a.append(row)
+        print(row)
+num = len(a[0])-1
+hypothesis = a[0][:-1]
+
+print("\n The maximally generic hypothesis is",["?"] * num)
+print("\n The maximally specific hypothesis is",["0"] * num)
+print("\n FIND -S  maximally specicfic hypothesis")
+
+for i in range(len(a)):
+    if ( a[i][num] == 'yes'):
+        for j in range(num):
+            if (a[i][j] != hypothesis[j]) :
+                hypothesis[j] = "?"
+           
+    print("\n the training example no", i+1 ,"the hypothesis is :")
+    print(hypothesis)
+           
+print("\n the maximally specific is : ",hypothesis )
+
+                

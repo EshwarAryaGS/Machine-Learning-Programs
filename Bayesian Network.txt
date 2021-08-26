@@ -1,0 +1,51 @@
+from pomegranate import*
+
+exercise = DiscreteDistribution({'True':0.4,'False':0.6})
+smokes = DiscreteDistribution({'True':0.15,'False':0.85})
+
+BP = ConditionalProbabilityTable(
+          [['True','True','True',0.45],
+           ['True','True','False',0.55],
+           ['True','False','True',0.05],
+           ['True','False','False',0.95],
+           ['False','True','True',0.95],
+           ['False','True','False',0.05],
+           
+           ['False','False','True',0.45],
+           ['False','False','True',0.45]] , [exercise,smokes])
+
+chol = ConditionalProbabilityTable(
+            [['True','True',0.8],
+             ['True','False',0.2],
+             ['False','True',0.2],
+             ['False','False',0.8]] , [smokes])
+
+attack = ConditionalProbabilityTable(
+            [['True','True',0.75],
+             ['True','False',0.25],
+             ['False','True',0.05],
+             ['False','False',0.95]] , [BP])
+
+s0 = State(exercise, name = 'exercise')
+s1 = State(smokes, name='smokes')
+s2 = State(BP,name='BP')
+s3 = State(chol,name='chol')
+s4 = State(attack,name='attack')
+
+
+network = BayesianNetwork("HEART ATTACK")
+network.add_nodes(s0,s1,s2,s3,s4)
+
+network.add_edge(s0,s2)
+network.add_edge(s1,s2)
+network.add_edge(s1,s3)
+network.add_edge(s2,s4)
+
+network.bake()
+observation = {'execise' :'False','smokes':'True'}
+beliefs = map(str,network.predict_proba(observation))
+
+print("\n" .join("{}\t\t{}".format(state.name,belief) for state,belief in zip(network.states,beliefs)))
+
+
+          

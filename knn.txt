@@ -1,0 +1,43 @@
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+
+iris= load_iris()
+
+for i in range(len(iris.target_names)):
+    print("\n {0} : {1} \t".format(i,iris.target_names[i]))
+   
+Xtrain,Xtest,ytrain,ytest = train_test_split(iris["data"],iris["target"],random_state=0)
+
+ntrain = Xtrain.shape[0]
+ntest = Xtest.shape[0]
+
+kn = KNeighborsClassifier(n_neighbors=2)
+kn.fit(Xtrain,ytrain)
+
+xnew = np.array([[5,2.9,1,0.2]])
+print("\n XNEW : \t",xnew)
+prediction = kn.predict(xnew)
+
+print("\n PREDICTED FEATURE VALUE : {}\t".format(prediction))
+print("\n PREDICTED TARGET NAME : {}\t".format(iris['target_names'][prediction]))
+
+i=1
+x=Xtest[i]
+xnew = np.array([x])
+print("\n XNEW : \t",xnew)
+
+for i in range(len(Xtest)):
+    x=Xtest[i]
+    xnew = np.array([x])
+    prediction = kn.predict(xnew)
+   
+    print("\n ACTUAL : {0}{1} ,  PREDICTION : {2}{3} \n".format(ytest[i],iris['target_names'][ytest[i]],prediction,iris['target_names'][prediction]))
+   
+print("\n TEST SCORE [ACCURACY] : {:.2f}\n ".format(kn.score(Xtest,ytest)))
+
+
+
+
+    
